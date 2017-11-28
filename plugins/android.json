@@ -9,6 +9,12 @@
   "installed_plugins": {
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.example.rqs"
+    },
+    "cordova-plugin-camera": {
+      "PACKAGE_NAME": "com.example.rqs"
+    },
+    "cordova-plugin-geolocation": {
+      "PACKAGE_NAME": "com.example.rqs"
     }
   },
   "dependent_plugins": {}

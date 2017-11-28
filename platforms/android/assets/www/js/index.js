@@ -65,7 +65,7 @@ function onLogIn (){
 
 
 function openList(){
-    window.location = "animal_list.html";
+    window.location = "entries_list.html";
 }
 
 
