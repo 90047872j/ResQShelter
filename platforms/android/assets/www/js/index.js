@@ -53,7 +53,7 @@ function onLogIn (){
 
     var textUser = document.getElementById("inputUser").value;
     var textPassword = document.getElementById("inputPassword").value;
-    if (textUser == "" || textPassword == "") {
+    if (textUser.trim() == "" || textPassword.trim() == "") {
         alert("No fields can be empty");
         } else if (textPassword.length < 5){
          alert("Password must have more than 5 characters");   

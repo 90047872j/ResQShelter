@@ -28,7 +28,7 @@ var eAge;
 var x = document.getElementById("myCheck");
 var eLat;
 var eLong;
-ePicture = "hla";
+ePicture = "Not Available";
 
 
 var app = {
@@ -64,6 +64,16 @@ function createEntry (){
  eLong = document.getElementById("inputLong").value;
  
 
+if (areFieldsEmpty()){
+    alert ("estan vacios");
+} else if (eName.length > 50){
+    alert ("Name must be shorter than 50 characters");
+} else if (eType.length > 100){
+     alert ("Type must be shorter than 100 characters");
+} else if (eFounder.length > 200) {
+    alert ("Founder must be shorter than 200 characters");
+} else {
+
 if (x.checked) {
     isChipped = 1;
 } 
@@ -71,6 +81,7 @@ if (x.checked) {
 doAddItems();
 window.location = "index.html";
 
+}
 
 }
 
@@ -101,9 +112,8 @@ alert (eName + " " + eDescription + " " + eLat+ " " +eLong+ " " +ePicture + " " 
 //}
 
 function onBackButton(){
-window.location = "entries_list.html";
-}
-
+       window.location = "entries_list.html";
+    }
 
 function cameraGetPicture() {
   
@@ -150,6 +160,20 @@ function getLocation () {
     var watchID = navigator.geolocation.watchPosition(onSuccess,onError,options);
 
      document.getElementById("seguiment").innerHTML = watchID;
+
+}
+
+function areFieldsEmpty(){
+if (eName.trim() == "" ||
+    eDescription.trim() == "" ||
+    eType.trim() == "" ||
+    eFounder.trim() == "" ||
+    eAge.trim() == "" || 
+    eLat.trim() == "" ||
+    eLong.trim() == "") {
+        return true;
+        }
+        return false;
 
 }
 
