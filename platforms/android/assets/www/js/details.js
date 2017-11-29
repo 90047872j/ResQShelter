@@ -17,12 +17,21 @@
  * under the License.
  */
 
+
 var db = window.openDatabase("Database", "1.0", "CordovaDemo", 200000);
-var textStudying = 0;
-var textName;
-var textSurName;
-var textAge;
-var x = document.getElementById("myCheck");
+
+var cIsChipped = "has no chip";
+var cName;
+var cDescription;
+var cType;
+var cFounder;
+var cAge;
+var cLat;
+var cLong;
+var cPicture = "";
+var eId;
+
+
 
 var app = {
     initialize: function() {
@@ -32,7 +41,14 @@ var app = {
     onDeviceReady: function() {
         //document.addEventListener('backbutton',onBackButton,false);
 
-        document.getElementById("b_create").addEventListener("touchstart",createPerson);
+        //document.getElementById("b_create").addEventListener("touchstart",createPerson);
+        //document.getElementById("b_create").addEventListener("touchstart",createPerson);
+
+    document.getElementById("t_chipped").value = "Has NO chip";
+        eId = getParameterByName("entry_id");
+        document.getElementById("b_delete").addEventListener("touchstart",doDeleteCurrent);
+       findItemInTable();
+
     },
 
     receivedEvent: function(id) {
@@ -45,40 +61,71 @@ var app = {
     }
 };
 
-function createPerson (){
 
-
-            textName = document.getElementById("inputName").value;
-        textSurName = document.getElementById("inputSurname").value;
-        textAge = document.getElementById("inputAge").value;
-
-if (x.checked) {
-    textStudying = 1;
-} 
-
-doAddItems();
-window.location = "index.html";
-
-
-}
 
 function successCB() {
-   alert("success!");
+   //alert("success!");
 }
 
 function errorCB(err) {
     alert("Error processing SQL: "+err.code+" message: "+err.message);
 }
 
-function doAddItems(){
-    db.transaction(addItemsDemoTx, errorCB, successCB);
+function findItemInTable(){
+     db.transaction(findById, errorCB, successCB);
 }
-function addItemsDemoTx(tx) {
+function findById(tx) {
+    tx.executeSql('SELECT * FROM ANIMAL WHERE Id =' + eId ,[], queryFoundSuccess, errorCB);
+}
 
-//tx.executeSql("INSERT INTO DEMO (Name, Surname, Age, Studying) VALUES (\"" + textName + "\",\""+ textSurName + "\",\""+ textAge + "\",\""+ textStudying + "\")");
+function queryFoundSuccess(tx, results){
+    if (results.rows.item(0).Chipped==1){
+        cIsChipped = "Has chip"; 
+    }
 
-tx.executeSql('INSERT INTO DEMO (Name, Surname, Age, Studying) VALUES ("' + textName + '","'+ textSurName + '","'+ textAge + '","'+ textStudying + '")');
+    document.getElementById("t_name").innerHTML = results.rows.item(0).Name;;
+    document.getElementById("t_description").innerHTML = results.rows.item(0).Description;
+    document.getElementById("t_age").innerHTML = results.rows.item(0).Age;
+    document.getElementById("t_type").innerHTML = results.rows.item(0).Type;
+    document.getElementById("t_founder").innerHTML = results.rows.item(0).Founder;
+    document.getElementById("t_chipped").innerHTML = cIsChipped;
+    document.getElementById("t_loc").innerHTML = results.rows.item(0).Latitude + ", " + results.rows.item(0).Longitude;
 
+
+    if (results.rows.item(0).Picture == "Not Available"){
+    document.getElementById('myImage').src ="img/logo.png";   
+    } else {
+    document.getElementById('myImage').src = "data:image/jpeg;base64," + results.rows.item(0).Picture;
+    }
+
+
+}
+
+
+function doDeleteCurrent(){
+    db.transaction(deleteCurrentTx, errorCB, successDeleteCB);
+}
+
+function deleteCurrentTx(tx) {
+    tx.executeSql('DELETE FROM ANIMAL WHERE Id =' + eId);
+
+
+ }
+
+ function successDeleteCB() {
+    alert("item/s eliminat/s!");
+    window.location = "entries_list.html";
+ }
+
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
 

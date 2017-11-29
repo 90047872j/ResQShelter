@@ -36,8 +36,6 @@ var app = {
     document.getElementById("b_add_new").addEventListener("touchstart",openCreate);
     document.getElementById("b_search").addEventListener("touchstart",doSearchBy);
     document.getElementById("b_clear_filter").addEventListener("touchstart",doClearFilter);
-
-
     },
 
 
@@ -76,15 +74,13 @@ function listItemsTx(tx) {
 }
 
 function queryListSuccess(tx, results){
-var len = results.rows.length;
 var tblText='<table id="t_animals"><tr><th>Id</th><th>Name</th></tr>'; //capçalera de la taula
             var len = results.rows.length;
             for (var i = 0; i < len; i++) {
-                tblText +='<tr><td>' +
+                tblText +='<tr><td onclick = "openDetails('+results.rows.item(i).Id+');">' + 
                  results.rows.item(i).Id +
                  '</td><td>' +
-                  results.rows.item(i).Name +
-                  '</td><td><button onclick=openDetails('+i+')>DETAILS</button></td></tr>';
+                  results.rows.item(i).Name;
             }
             tblText +="</table>";
             document.getElementById("tblDiv").innerHTML =tblText;
@@ -101,15 +97,13 @@ function listItemsByTx(tx) {
 }
 
 function queryListBySuccess(tx, results){
-var len = results.rows.length;
 var tblText='<table id="t_animals"><tr><th>Id</th><th>Name</th></tr>'; //capçalera de la taula
             var len = results.rows.length;
             for (var i = 0; i < len; i++) {
-                tblText +='<tr><td>' +
+                tblText +='<tr><td class="td" onclick = "openDetails('+results.rows.item(i).Id+');">' + 
                  results.rows.item(i).Id +
                  '</td><td>' +
-                  results.rows.item(i).Name +
-                  '</td><td><button onclick=openDetails('+i+')>DETAILS</button></td></tr>';
+                  results.rows.item(i).Name;
             }
             tblText +="</table>";
             document.getElementById("tblDiv").innerHTML =tblText;
@@ -142,7 +136,7 @@ function doAddDummyItems(){
     doListItems();
 }
 function addDummyItemsTx(tx) {
-    tx.executeSql('INSERT INTO ANIMAL (Name, Description, Latitude, Longitude, Picture, Age, Type, Founder, Chipped) VALUES ("Top Cat", "Leader of Manhattan Alley Cats","40.712775","-74.006835","https://pa1.narvii.com/6371/1fac1e8eb6930e43f0410280f38ce1bb0aa9a91c_hq.gif", "7","Yellow-Furred Cat", "Officer Dibble","0")');
+    tx.executeSql('INSERT INTO ANIMAL (Name, Description, Latitude, Longitude, Picture, Age, Type, Founder, Chipped) VALUES ("Top Cat", "Leader of Manhattan Alley Cats","40.712775","-74.006835","aHR0cHM6Ly9wYTEubmFydmlpLmNvbS82MzcxLzFmYWMxZThlYjY5MzBlNDNmMDQxMDI4MGYzOGNlMWJiMGFhOWE5MWNfaHEuZ2lm", "7","Yellow-Furred Cat", "Officer Dibble","0")');
 }
 
 function openCreate(){
@@ -150,8 +144,9 @@ function openCreate(){
 }
 
 
-function openDetails(){
-    window.location = "details.html";
+function openDetails(id){
+  //window.location = "details.html";
+  window.location.href = 'details.html?entry_id='+id+'';
 }
 
 
