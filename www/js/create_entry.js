@@ -29,7 +29,8 @@ var x = document.getElementById("myCheck");
 var eLat;
 var eLong;
 ePicture = "Not Available";
-
+var cameraSource = 1;
+var eId = null;
 
 var app = {
     initialize: function() {
@@ -39,8 +40,18 @@ var app = {
     onDeviceReady: function() {
         document.addEventListener('backbutton',onBackButton,false);
         document.getElementById("b_location").addEventListener("touchstart",getLocation);
-        document.getElementById("b_image").addEventListener("touchstart",cameraGetPicture);
+        document.getElementById("b_image").addEventListener("touchstart",makeCameraSelector);
         document.getElementById("b_create").addEventListener("touchstart",createEntry);
+
+        eId = getParameterByName("entry_id");
+
+        if (eId != null){
+          document.getElementById("t_title").innerHTML = "Modify Item";
+          document.getElementById("b_create").innerHTML = "UPDATE";
+          findItemInTable();
+
+        }
+
     },
 
     receivedEvent: function(id) {
@@ -65,20 +76,25 @@ function createEntry (){
  
 
 if (areFieldsEmpty()){
-    alert ("estan vacios");
-} else if (eName.length > 50){
-    alert ("Name must be shorter than 50 characters");
-} else if (eType.length > 100){
-     alert ("Type must be shorter than 100 characters");
-} else if (eFounder.length > 200) {
-    alert ("Founder must be shorter than 200 characters");
-} else {
 
+navigator.notification.alert("No fields can be empty");
+} else if (eName.length > 50){
+  navigator.notification.alert("Name must be shorter than 50 characters");
+} else if (eType.length > 100){
+  navigator.notification.alert("Type must be shorter than 100 characters");
+} else if (eFounder.length > 200) {
+  navigator.notification.alert("Founder must be shorter than 200 characters");
+} else {
 if (x.checked) {
     isChipped = 1;
 } 
 
-doAddItems();
+if (eId!=null){
+  doUpdateItem();
+} else {
+  doAddItems();
+}
+
 window.location = "index.html";
 
 }
@@ -117,12 +133,14 @@ function onBackButton(){
 
 function cameraGetPicture() {
   
-   navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
+   navigator.camera.getPicture(onSuccess, onFail, { quality: 100,
       destinationType: Camera.DestinationType.DATA_URL,
-      sourceType: Camera.PictureSourceType.CAMERA
+      sourceType: cameraSource,
+      encodingType: 0,
+      correctOrienation: true
+
    });
 
-   //sourceType: Camera.PictureSourceType.PHOTOLIBRARY
 
    function onSuccess(imageURL) {
       var image = document.getElementById('myImage');
@@ -176,5 +194,87 @@ if (eName.trim() == "" ||
         return false;
 
 }
+
+
+
+function makeCameraSelector(){
+    var message = "Choose Photo Source";
+    var title = "SELECTOR";
+    var buttonLabels = "GALLERY, CAMERA";
+navigator.notification.confirm(message,selectorCallback,title,buttonLabels);
+console.log("alert button pressed");
+
+}
+
+function selectorCallback(buttonIndex){
+  if (buttonIndex == 1){
+    cameraSource = 0;
+  }
+cameraGetPicture();
+}
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+
+
+function findItemInTable(){
+     db.transaction(findById, errorCB, successCB);
+}
+function findById(tx) {
+    tx.executeSql('SELECT * FROM ANIMAL WHERE Id =' + eId ,[], queryFoundSuccess, errorCB);
+}
+
+function queryFoundSuccess(tx, results){
+    if (results.rows.item(0).Chipped==1){
+        document.getElementById("myCheck").checked = true;
+ 
+    }
+
+    document.getElementById("inputName").value = results.rows.item(0).Name;;
+    document.getElementById("inputDescription").value = results.rows.item(0).Description;
+    document.getElementById("inputAge").value = results.rows.item(0).Age;
+    document.getElementById("inputType").value = results.rows.item(0).Type;
+    document.getElementById("inputFounder").value = results.rows.item(0).Founder;
+    document.getElementById("inputLat").value = results.rows.item(0).Latitude; 
+    document.getElementById("inputLong").value = results.rows.item(0).Longitude;
+    
+
+    if (results.rows.item(0).Picture == "Not Available"){
+        document.getElementById('myImage').src ="img/no_image.png";  
+        } else if (results.rows.item(0).Picture == "Top Cat"){
+                  document.getElementById('myImage').src ="img/topcat.gif";
+        }else{     
+        document.getElementById('myImage').src = "data:image/jpeg;base64," + results.rows.item(0).Picture;
+        }
+
+
+}
+
+
+ function doUpdateItem(){
+  db.transaction(updateRowTx, errorCB, successUpdateCB);
+}
+function updateRowTx(tx) {
+   tx.executeSql('UPDATE ANIMAL SET Name = "' + eName + '", Description = "' + eDescription + '",Latitude = "' + eLat + '",Picture = "' + ePicture + '",Age = "' + eAge + '",Name = "' + eName + '",Type = "' + eType + '",Founder = "' + eFounder + '", Chipped = "' + isChipped +'" WHERE Id ="' + eId +'"');
+   // tx.executeSql('UPDATE ANIMAL SET Name = "' + eName +'" WHERE Id ="' + 10 +'"');
+
+
+ }
+
+function successUpdateCB()
+ {
+    alert("item modificat");
+    doListItems(); //Crido al llistat per a que actualitzi.
+ }
+
+
 
 app.initialize();

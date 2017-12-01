@@ -47,6 +47,7 @@ var app = {
     document.getElementById("t_chipped").value = "Has NO chip";
         eId = getParameterByName("entry_id");
         document.getElementById("b_delete").addEventListener("touchstart",doDeleteCurrent);
+              document.getElementById("b_edit").addEventListener("touchstart",openCreate);
        findItemInTable();
 
     },
@@ -93,10 +94,12 @@ function queryFoundSuccess(tx, results){
 
 
     if (results.rows.item(0).Picture == "Not Available"){
-    document.getElementById('myImage').src ="img/logo.png";   
-    } else {
-    document.getElementById('myImage').src = "data:image/jpeg;base64," + results.rows.item(0).Picture;
-    }
+        document.getElementById('myImage').src ="img/no_image.png";   
+        } else if (results.rows.item(0).Picture == "Top Cat"){
+                  document.getElementById('myImage').src ="img/topcat.gif";
+        }else{     
+        document.getElementById('myImage').src = "data:image/jpeg;base64," + results.rows.item(0).Picture;
+        }
 
 
 }
@@ -127,6 +130,19 @@ function getParameterByName(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+
+
+
+function openCreate(){
+
+window.location.href = 'create_entry.html?entry_id='+eId+'';
+
+
+
+}
+
+
+
 
 
 //function onPause(){

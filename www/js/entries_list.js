@@ -123,8 +123,7 @@ function deleteAllTx(tx) {
     tx.executeSql('DELETE FROM ANIMAL');
  }
 
- function successDeleteCB()
- {
+ function successDeleteCB() {
     alert("item/s eliminat/s!");
     doListItems(); //Crido al llistat per a que actualitzi.
  }
@@ -136,7 +135,7 @@ function doAddDummyItems(){
     doListItems();
 }
 function addDummyItemsTx(tx) {
-    tx.executeSql('INSERT INTO ANIMAL (Name, Description, Latitude, Longitude, Picture, Age, Type, Founder, Chipped) VALUES ("Top Cat", "Leader of Manhattan Alley Cats","40.712775","-74.006835","aHR0cHM6Ly9wYTEubmFydmlpLmNvbS82MzcxLzFmYWMxZThlYjY5MzBlNDNmMDQxMDI4MGYzOGNlMWJiMGFhOWE5MWNfaHEuZ2lm", "7","Yellow-Furred Cat", "Officer Dibble","0")');
+    tx.executeSql('INSERT INTO ANIMAL (Name, Description, Latitude, Longitude, Picture, Age, Type, Founder, Chipped) VALUES ("Top Cat", "Leader of Manhattan Alley Cats","40.712775","-74.006835","Top Cat", "7","Yellow-Furred Cat", "Officer Dibble","0")');
 }
 
 function openCreate(){
