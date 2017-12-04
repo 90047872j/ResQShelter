@@ -46,7 +46,7 @@ var app = {
         eId = getParameterByName("entry_id");
 
         if (eId != null){
-          document.getElementById("t_title").innerHTML = "Modify Item";
+          document.getElementById("t_title").innerHTML = "Modify Entry #"+eId;
           document.getElementById("b_create").innerHTML = "UPDATE";
           findItemInTable();
 
@@ -101,34 +101,31 @@ window.location = "index.html";
 
 }
 
-function successCB() {
-   alert("success!");
+function successAddedEntry() {
+  makeToast('Entry: "' +  eName + '" succesfully added');
+   
 }
 
 function errorCB(err) {
-    alert("Error processing SQL: "+err.code+" message: "+err.message);
+    navigator.notification.alert("Error processing SQL: "+err.code+" message: "+err.message);
 }
 
 function doAddItems(){
-    db.transaction(addItemsDemoTx, errorCB, successCB);
+    db.transaction(addItemsDemoTx, errorCB, successAddedEntry);
+    
 }
 function addItemsDemoTx(tx) {
 tx.executeSql('INSERT INTO ANIMAL (Name, Description, Latitude, Longitude, Picture, Age, Type, Founder, Chipped) VALUES ("' + eName + '","'+ eDescription + '","'+ eLat + '","'+ eLong + '","'+ ePicture + '","'+ eAge + '","'+ eType + '","'+ eFounder + '","'+ isChipped + '")');
-
-alert (eName + " " + eDescription + " " + eLat+ " " +eLong+ " " +ePicture + " " + eAge + " " + eType + " " + eFounder + " " + isChipped);
 }
 
 
-//function onPause(){
-//    alert ("On pause");
-//}
-
-//function onResume(){
-//    alert ("On Resume");
-//}
-
 function onBackButton(){
+
+if (eId == null) {
        window.location = "entries_list.html";
+     } else{
+        window.location.href = 'details.html?entry_id='+eId+'';;
+     }
     }
 
 function cameraGetPicture() {
@@ -149,7 +146,7 @@ function cameraGetPicture() {
    }
 
    function onFail(message) {
-      alert('Failed because: ' + message);
+      navigator.notification.alert('Failed because: ' + message);
    }
 
 }
@@ -158,12 +155,10 @@ function getLocation () {
 
    var options = {                      
           enableHighAccuracy: true, 
-          maximumAge: 3600000     //quanta estona es guarda el valor
-   };
+          maximumAge: 3600000     
+       };
 
     function onSuccess(position) { 
-
-        alert(position.coords.latitude + " " + position.coords.longitude);
         document.getElementById("inputLat").value = position.coords.latitude;
         document.getElementById("inputLong").value = position.coords.longitude;
     };
@@ -171,7 +166,7 @@ function getLocation () {
 
     function onError(error) { 
         var failure = 'code: '    + error.code    + '\n' + 'message: ' + error.message + '\n';
-        document.getElementById("main_text").innerHTML = failure;
+        navigator.notification.alert('Failed because: ' + failure);
     };
 
     navigator.geolocation.getCurrentPosition(onSuccess,onError,options);
@@ -199,7 +194,7 @@ if (eName.trim() == "" ||
 
 function makeCameraSelector(){
     var message = "Choose Photo Source";
-    var title = "SELECTOR";
+    var title = "Selector";
     var buttonLabels = "GALLERY, CAMERA";
 navigator.notification.confirm(message,selectorCallback,title,buttonLabels);
 console.log("alert button pressed");
@@ -258,22 +253,35 @@ function queryFoundSuccess(tx, results){
 
 }
 
+function successCB() {
+  console.log("Success");
+}
 
  function doUpdateItem(){
   db.transaction(updateRowTx, errorCB, successUpdateCB);
 }
 function updateRowTx(tx) {
    tx.executeSql('UPDATE ANIMAL SET Name = "' + eName + '", Description = "' + eDescription + '",Latitude = "' + eLat + '",Picture = "' + ePicture + '",Age = "' + eAge + '",Name = "' + eName + '",Type = "' + eType + '",Founder = "' + eFounder + '", Chipped = "' + isChipped +'" WHERE Id ="' + eId +'"');
-   // tx.executeSql('UPDATE ANIMAL SET Name = "' + eName +'" WHERE Id ="' + 10 +'"');
-
-
  }
 
 function successUpdateCB()
  {
-    alert("item modificat");
-    doListItems(); //Crido al llistat per a que actualitzi.
+    makeToast('Entry: "' +  eName + '" updated');
+    doListItems();
  }
+
+
+
+function makeToast(toastMessage) {
+  window.plugins.toast.showWithOptions(
+    {
+      message: toastMessage,
+      duration: "short", // which is 2000 ms. "long" is 4000. Or specify the nr of ms yourself.
+      position: "bottom",
+      addPixelsY: -40  // added a negative value to move it up a bit (default 0)
+    }
+)
+}
 
 
 

@@ -39,14 +39,10 @@ var app = {
     },
 
     onDeviceReady: function() {
-        //document.addEventListener('backbutton',onBackButton,false);
+        document.addEventListener('backbutton',onBackButton,false);
 
-        //document.getElementById("b_create").addEventListener("touchstart",createPerson);
-        //document.getElementById("b_create").addEventListener("touchstart",createPerson);
-
-    document.getElementById("t_chipped").value = "Has NO chip";
         eId = getParameterByName("entry_id");
-        document.getElementById("b_delete").addEventListener("touchstart",doDeleteCurrent);
+        document.getElementById("b_delete").addEventListener("touchstart",makeDialogOnDelete);
               document.getElementById("b_edit").addEventListener("touchstart",openCreate);
        findItemInTable();
 
@@ -65,11 +61,11 @@ var app = {
 
 
 function successCB() {
-   //alert("success!");
+   console.log("Success");
 }
 
 function errorCB(err) {
-    alert("Error processing SQL: "+err.code+" message: "+err.message);
+    navigator.notification.alert("Error processing SQL: "+err.code+" message: "+err.message);
 }
 
 function findItemInTable(){
@@ -116,7 +112,7 @@ function deleteCurrentTx(tx) {
  }
 
  function successDeleteCB() {
-    alert("item/s eliminat/s!");
+     makeToast('Entry: ' + eId + ', "'+ document.getElementById("t_name").innerHTML + '" was deleted');
     window.location = "entries_list.html";
  }
 
@@ -134,27 +130,48 @@ function getParameterByName(name, url) {
 
 
 function openCreate(){
-
 window.location.href = 'create_entry.html?entry_id='+eId+'';
-
-
-
 }
 
 
+function makeDialogOnDelete(){
+    var message = "Delete this entry?";
+    var title = "Confirmation";
+    var buttonLabels = "Yes, No";
+navigator.notification.confirm(message,selectorCallback,title,buttonLabels);
+console.log("alert button pressed");
 
+}
 
+function selectorCallback(buttonIndex){
+  if (buttonIndex == 1){
+   doDeleteCurrent();
+}
+}
+
+function makeToast(toastMessage) {
+  window.plugins.toast.showWithOptions(
+    {
+      message: toastMessage,
+      duration: "short", // which is 2000 ms. "long" is 4000. Or specify the nr of ms yourself.
+      position: "bottom",
+      addPixelsY: -40  // added a negative value to move it up a bit (default 0)
+    }
+)
+}
 
 //function onPause(){
 //    alert ("On pause");
 //}
 
-//function onResume(){
-//    alert ("On Resume");
-//}
 
-//function onBackButton(){
-//    alert ("On Back Button");
-//}
+function onResume(){
+   findItemInTable();
+}
+
+
+function onBackButton(){
+window.location.href = 'entries_list.html';
+}
 
 app.initialize();

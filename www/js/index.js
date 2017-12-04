@@ -16,11 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+
 var app = {
     // Application Constructor
     initialize: function() {
 
     document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+    document.addEventListener('backbutton',onBackButton,false);
 
 
 
@@ -50,22 +53,41 @@ var app = {
 };
 
 function onLogIn (){
-
-    var textUser = document.getElementById("inputUser").value;
-    var textPassword = document.getElementById("inputPassword").value;
+     textUser = document.getElementById("inputUser").value;
+     textPassword = document.getElementById("inputPassword").value;
     if (textUser.trim() == "" || textPassword.trim() == "") {
-        alert("No fields can be empty");
+        navigator.notification.alert("No fields can be empty");
         } else if (textPassword.length < 5){
-         alert("Password must have more than 5 characters");   
+            navigator.notification.alert("Password must have more than 5 characters");
+             //document.getElementById("inputUser").value = "";
+              document.getElementById("inputPassword").value = "";
         } else {
             localStorage.setItem("signedUpUser", textUser + textPassword);
+            makeToast('User: "' +  textUser + '" succesfully logged in');
             openList();
+           
+            
         }
 }
 
 
 function openList(){
     window.location = "entries_list.html";
+}
+
+function onBackButton(){
+    navigator.app.exitApp();
+}
+
+function makeToast(toastMessage) {
+  window.plugins.toast.showWithOptions(
+    {
+      message: toastMessage,
+      duration: "short", // which is 2000 ms. "long" is 4000. Or specify the nr of ms yourself.
+      position: "bottom",
+      addPixelsY: -40  // added a negative value to move it up a bit (default 0)
+    }
+)
 }
 
 
