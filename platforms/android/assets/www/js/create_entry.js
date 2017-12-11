@@ -18,7 +18,6 @@
  */
 
 var db = window.openDatabase("Database", "1.0", "CordovaDemo", 200000);
-
 var isChipped = 0;
 var eName;
 var eDescription;
@@ -190,8 +189,6 @@ if (eName.trim() == "" ||
 
 }
 
-
-
 function makeCameraSelector(){
     var message = "Choose Photo Source";
     var title = "Selector";
@@ -217,7 +214,6 @@ function getParameterByName(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
-
 
 
 function findItemInTable(){
@@ -247,7 +243,7 @@ function queryFoundSuccess(tx, results){
         } else if (results.rows.item(0).Picture == "Top Cat"){
                   document.getElementById('myImage').src ="img/topcat.gif";
         }else{     
-        document.getElementById('myImage').src = "data:image/jpeg;base64," + results.rows.item(0).Picture;
+        document.getElementById('myImage').src = "data:image/png;base64," + results.rows.item(0).Picture;
         }
 
 
@@ -261,15 +257,14 @@ function successCB() {
   db.transaction(updateRowTx, errorCB, successUpdateCB);
 }
 function updateRowTx(tx) {
-   tx.executeSql('UPDATE ANIMAL SET Name = "' + eName + '", Description = "' + eDescription + '",Latitude = "' + eLat + '",Picture = "' + ePicture + '",Age = "' + eAge + '",Name = "' + eName + '",Type = "' + eType + '",Founder = "' + eFounder + '", Chipped = "' + isChipped +'" WHERE Id ="' + eId +'"');
+   tx.executeSql('UPDATE ANIMAL SET Name = "' + eName + '", Description = "' + eDescription + '",Latitude = "' + eLat + '", Longitude = "' + eLong + '",Picture = "' + ePicture + '",Age = "' + eAge + '",Name = "' + eName + '",Type = "' + eType + '",Founder = "' + eFounder + '", Chipped = "' + isChipped +'" WHERE Id ="' + eId +'"');
  }
 
 function successUpdateCB()
  {
-    makeToast('Entry: "' +  eName + '" updated');
+    makeToast('Entry: '+eId+', "' +  eName + '" updated');
     doListItems();
  }
-
 
 
 function makeToast(toastMessage) {
@@ -282,7 +277,5 @@ function makeToast(toastMessage) {
     }
 )
 }
-
-
 
 app.initialize();

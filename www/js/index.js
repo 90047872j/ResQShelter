@@ -25,23 +25,15 @@ var app = {
     document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
     document.addEventListener('backbutton',onBackButton,false);
 
-
-
         if (localStorage.getItem("signedUpUser") != null) {
             openList();
             }
-
     },
 
-    // deviceready Event Handler
-    //
-    // Bind any cordova events here. Common events are:
-    // 'pause', 'resume', etc.
     onDeviceReady: function() {
         document.getElementById("b_login").addEventListener("touchstart",onLogIn);
     },
 
-    // Update DOM on a Received Event
     receivedEvent: function(id) {
         var parentElement = document.getElementById(id);
         var listeningElement = parentElement.querySelector('.listening');
@@ -59,17 +51,13 @@ function onLogIn (){
         navigator.notification.alert("No fields can be empty");
         } else if (textPassword.length < 5){
             navigator.notification.alert("Password must have more than 5 characters");
-             //document.getElementById("inputUser").value = "";
               document.getElementById("inputPassword").value = "";
         } else {
             localStorage.setItem("signedUpUser", textUser + textPassword);
             makeToast('User: "' +  textUser + '" succesfully logged in');
             openList();
-           
-            
         }
 }
-
 
 function openList(){
     window.location = "entries_list.html";
@@ -89,7 +77,5 @@ function makeToast(toastMessage) {
     }
 )
 }
-
-
 
 app.initialize();

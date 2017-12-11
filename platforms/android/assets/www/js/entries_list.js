@@ -17,15 +17,12 @@
  * under the License.
  */
 
-
 var db = window.openDatabase("Database", "1.0", "CordovaDemo", 200000);
 var search_by = "*";
 
-
-
 var app = {
     initialize: function() {
-     document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+    document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
     document.addEventListener('resume',onResume,false); 
     document.addEventListener('backbutton',onBackButton,false);
     document.getElementById("b_add_new").addEventListener("touchstart",openCreate);
@@ -81,9 +78,6 @@ var tblText='<table id="t_animals"><tr><th>Id</th><th>Name</th></tr>';
             document.getElementById("tblDiv").innerHTML =tblText;
 }
 
-
-
-
 function doListItemsBy(){
      db.transaction(listItemsByTx, errorCB, successCB);
 }
@@ -117,7 +111,6 @@ function deleteAllTx(tx) {
     makeToast('All entries deleted');
     doListItems();
  }
-
 
 
 function doAddDummyItems(){

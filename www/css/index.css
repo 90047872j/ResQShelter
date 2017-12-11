@@ -90,6 +90,13 @@ height: 100%;
 color: #0b06ff;
 text-decoration: underline;
  font-weight:bold;
+ width: 20%;
+}
+
+#tr-footer{
+height: 16px;
+width:100%;
+background:transparent;
 }
 
 th {
@@ -109,6 +116,18 @@ button {
     text-transform:uppercase;
 }
 
+
+label {
+
+font-weight: bold;
+text-align: left;
+float: left;
+    font-size: 14px;
+    text-transform:uppercase;
+}
+
+
+
 button:active {
     background-color: #002db3;
 }
@@ -121,6 +140,12 @@ button:active {
 
 #b_delete:active {
     background-color: #b30000;
+}
+
+
+#locationLabel{
+    font-weight:bold;
+    font-size: 14px;
 }
 
 
@@ -142,6 +167,7 @@ background-color:#ffcc99;
     outline: none !important;
     border:1px solid #ff8000; 
 }
+
 
 
 .event {
